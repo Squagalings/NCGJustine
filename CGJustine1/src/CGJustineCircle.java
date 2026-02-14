@@ -2,11 +2,21 @@ import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
+
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class CGJustineCircle {
     static List<List<Integer>> myLst = new ArrayList<>();
     private final static int CANVASWIDTH = 400, CANVASHEIGHT = 300;
+    private static Map<String, List<Integer>> myMap;
+
+    enum Tool {
+        SELECT, DRAW, OPEN, SAVE
+    }
+
+    protected static Tool currTool = Tool.SELECT;
 
     public static void createAndShowGUI() {
         JFrame frame = new JFrame();
@@ -16,7 +26,13 @@ public class CGJustineCircle {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(Color.WHITE);
-                g.fillOval(0, 0, 20, 20);
+                List<Integer> coord = myMap.get("A");
+                myMap.forEach((k, v) -> {
+                    int x = v.get(0);
+                    int y = v.get(1);
+                    g.fillOval(x, y, 20, 20);
+                });
+
             }
         };
         JPanel control = new JPanel();
@@ -40,6 +56,7 @@ public class CGJustineCircle {
 
         JToggleButton btnSelect = new JToggleButton("Select");
         JToggleButton btnDraw = new JToggleButton("Draw");
+        btnSelect.setSelected(true);
 
         btnSelect.addActionListener(e -> select());
         btnDraw.addActionListener(e -> draw());
@@ -62,25 +79,89 @@ public class CGJustineCircle {
         control.add(btnSave);
         control.add(btnOpen);
 
+        MouseInputListener mouselistener = createMouseListener(canvas);
+
+        canvas.addMouseListener(mouselistener);
+        canvas.addMouseMotionListener(mouselistener);
+
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
+    public static MouseInputListener createMouseListener(JPanel canvas) {
+        return new MouseInputListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("mouse clicked");
+
+                int x = e.getX();
+                int y = e.getY();
+
+                switch (currTool) {
+                    case DRAW:
+                        drawObject(x, y);
+                        break;
+
+                }
+
+                canvas.repaint();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+
+        };
+    }
+
+    protected static void drawObject(int x, int y) {
+        List<Integer> coord = new ArrayList<>();
+        coord.add(x);
+        coord.add(y);
+        myMap.put(null, coord);
+    }
+
     public static void save() {
         System.out.println("save");
+        currTool = Tool.SAVE;
     }
 
     public static void open() {
         System.out.println("open");
+        currTool = Tool.OPEN;
     }
 
     public static void select() {
         System.out.println("Select");
+        currTool = Tool.SELECT;
     }
 
     private static void draw() {
         System.out.println("Draw");
+        currTool = Tool.DRAW;
     }
 
     public static void main(String[] args) {
@@ -90,7 +171,7 @@ public class CGJustineCircle {
         int[][] values = {
                 { 10, 20, 30 }, { 40, 50, 60 }, { 70, 80, 90 }, { 100, 110, 120 }
         };
-        Map<String, List<Integer>> myMap = createMap(names, values);
+        myMap = createMap(names, values);
 
         SwingUtilities.invokeLater(() -> createAndShowGUI());
 
