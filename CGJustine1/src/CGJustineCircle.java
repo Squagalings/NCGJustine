@@ -141,7 +141,8 @@ public class CGJustineCircle {
         List<Integer> coord = new ArrayList<>();
         coord.add(x);
         coord.add(y);
-        myMap.put(null, coord);
+        String key = coord.hashCode() + "";
+        myMap.put(key, coord);
     }
 
     public static void save() {
