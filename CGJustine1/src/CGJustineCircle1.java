@@ -1,11 +1,7 @@
-import java.util.*;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.event.MouseInputListener;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 
 public class CGJustineCircle1 {
     // TODO: in the GUI, create 2 panels i.e. canvas, control
@@ -23,17 +19,25 @@ public class CGJustineCircle1 {
         JPanel control = new JPanel();
 
         // canvas
-        canvas.setPreferredSize(new Dimension(400, 300));
+        canvas.setPreferredSize(new Dimension(600, 400));
         canvas.setBackground(Color.BLACK);
 
         cp.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
+
+        // control
+        control.setPreferredSize(new Dimension(600, 50));
 
         gc.fill = GridBagConstraints.HORIZONTAL;
         gc.gridx = 0;
         gc.weighty = 0.5;
         cp.add(canvas, gc);
         cp.add(control, gc);
+
+        // TODO: In the canvas, add a mouse listener object
+        MouseInputListener mouselistener = createMouseListener(canvas);
+        canvas.addMouseListener(mouselistener);
+        canvas.addMouseMotionListener(mouselistener);
 
         // show window
         frame.pack();
@@ -42,9 +46,44 @@ public class CGJustineCircle1 {
 
     }
 
-    // TODO: In the canvas, add a mouse listener object
     // 1. add a function for mouse click. display mouse position at the terminal
-    // 2. create label and display the mouse position
+    public static MouseInputListener createMouseListener(JPanel canvas) {
+        return new MouseInputListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int xcor = e.getX();
+                int ycor = e.getY();
+                System.out.println("(" + xcor + ", " + ycor + ")");
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+            }
+        };
+
+    }
+    // 2. create label and display the mouse position when the mouse is moved
 
     // TODO: In the control, add some buttons
     // Add some functions for the buttons e.g. save to file and open file
